@@ -1,0 +1,21 @@
+{
+  "name": "paymentservice",
+  "version": "1.0.0",
+  "description": "Nodejs API wrapper for Braintree and Paypal",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -p ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@paypal/checkout-server-sdk": "^1.0.3",
+    "braintree": "^3.11.0",
+    "stripe": "^9.1.0"
+  },
+  "devDependencies": {
+    "@types/braintree": "^3.3.1"
+  }
+}
