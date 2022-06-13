@@ -8,12 +8,12 @@ class PaymentService {
 	/**
 	 * @param options - secret key, merchantId, environment and public key
 	 */
-	constructor(options: { privateKey: string; publicKey: string; merchantId: string; environment: any }) {
-		this.braintree.environment = options.environment;
-		this.braintree.merchantId = options.merchantId;
-		this.braintree.publicKey = options.publicKey;
-		this.braintree.privateKey = options.privateKey;
-		this.stripe.sk_test = options.privateKey;
+	constructor(options: { braintreePrivateKey: string; braintreePublicKey: string; braintreeMerchantId: string; braintreeEnvironment: any; stripeSecretKey: string }) {
+		this.braintree.braintreeEnvironment = options.braintreeEnvironment;
+		this.braintree.braintreeMerchantId = options.braintreeMerchantId;
+		this.braintree.braintreePublicKey = options.braintreePublicKey;
+		this.braintree.braintreePrivateKey = options.braintreePrivateKey;
+		this.stripe.stripeSecretKey = options.stripeSecretKey;
 	}
 }
 

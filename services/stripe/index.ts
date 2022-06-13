@@ -1,9 +1,11 @@
 import stripe from 'stripe';
 
 class Stripe {
-	static sk_test: string = '';
+	static stripeSecretKey: string = '';
 
-	static stripe = new stripe(Stripe.sk_test, { apiVersion: '2020-08-27' });
+	static stripe = new stripe(Stripe.stripeSecretKey, { apiVersion: '2020-08-27' });
+
+	// Customer methods
 
 	/**
 	 * Create a customer
@@ -20,6 +22,91 @@ class Stripe {
 			});
 		});
 	}
+
+	/**
+	 * Retrive a customer
+	 * 	 @param customerId - the customer id to retrieve
+	 * @returns {Promise<any>} - the customer
+	 */
+	static async retrieveCustomer(customerId: string): Promise<any> {
+		return new Promise((resolve, reject) => {
+			Stripe.stripe.customers.retrieve(customerId).then((result: any) => {
+				if (result.id) {
+					resolve(result);
+				} else {
+					reject(result);
+				}
+			});
+		});
+	}
+
+	/**
+	 * Update a customer
+	 * @param customerId - the customer id to update
+	 * @param customerOptions - options for the customer
+	 */
+	static async updateCustomer(customerId: string, customerOptions: any): Promise<any> {
+		return new Promise((resolve, reject) => {
+			Stripe.stripe.customers.update(customerId, customerOptions).then((result: any) => {
+				if (result.id) {
+					resolve(result);
+				} else {
+					reject(result);
+				}
+			});
+		});
+	}
+
+	/**
+	 * Delete a customer
+	 *	@param customerId - the customer id to delete
+	 */
+	static async deleteCustomer(customerId: string): Promise<any> {
+		return new Promise((resolve, reject) => {
+			Stripe.stripe.customers.del(customerId).then((result: any) => {
+				if (result.id) {
+					resolve(result);
+				} else {
+					reject(result);
+				}
+			});
+		});
+	}
+
+	/**
+	 * List all customers
+	 * @returns {Promise<any>} - the customers
+	 */
+	static async listCustomers(): Promise<any> {
+		return new Promise((resolve, reject) => {
+			Stripe.stripe.customers.list().then((result: any) => {
+				if (result.data) {
+					resolve(result.data);
+				} else {
+					reject(result);
+				}
+			});
+		});
+	}
+
+	/**
+	 * Search customers
+	 * @param searchOptions - options for the search
+	 * @returns {Promise<any>} - the customers
+	 */
+	static async searchCustomers(searchOptions: StripeSearchOptions): Promise<any> {
+		return new Promise((resolve, reject) => {
+			Stripe.stripe.customers.list(searchOptions).then((result: any) => {
+				if (result.data) {
+					resolve(result.data);
+				} else {
+					reject(result);
+				}
+			});
+		});
+	}
+
+	// Charge methods
 
 	/**
 	 * Create a charge
@@ -45,6 +132,41 @@ class Stripe {
 			Stripe.stripe.charges.list().then((result: any) => {
 				if (result.data) {
 					resolve(result.data);
+				} else {
+					reject(result);
+				}
+			});
+		});
+	}
+
+	/**
+	 * Retrieve a charge
+	 * @param chargeId - the charge id to retrieve
+	 *  @returns {Promise<any>} - the charge
+	 */
+	static async retrieveCharge(chargeId: string): Promise<any> {
+		return new Promise((resolve, reject) => {
+			Stripe.stripe.charges.retrieve(chargeId).then((result: any) => {
+				if (result.id) {
+					resolve(result);
+				} else {
+					reject(result);
+				}
+			});
+		});
+	}
+
+	/**
+	 * Update a charge
+	 * @param chargeId - the charge id to update
+	 * @param chargeOptions - options for the charge
+	 * @returns {Promise<any>} - the charge
+	 */
+	static async updateCharge(chargeId: string, chargeOptions: any): Promise<any> {
+		return new Promise((resolve, reject) => {
+			Stripe.stripe.charges.update(chargeId, chargeOptions).then((result: any) => {
+				if (result.id) {
+					resolve(result);
 				} else {
 					reject(result);
 				}
