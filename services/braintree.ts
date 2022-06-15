@@ -1,17 +1,25 @@
 import braintree, { Environment } from 'braintree';
 
 class Braintree {
-	static braintreeEnvironment: Environment;
-	static braintreeMerchantId: string = '';
-	static braintreePublicKey: string = '';
-	static braintreePrivateKey: string = '';
+	private braintreeEnvironment: Environment;
+	private braintreeMerchantId: any;
+	private braintreePublicKey: any;
+	private braintreePrivateKey: any;
+	private gateway: any;
 
-	static gateway = braintree.connect({
-		environment: Braintree.braintreeEnvironment,
-		merchantId: Braintree.braintreeMerchantId,
-		publicKey: Braintree.braintreePublicKey,
-		privateKey: Braintree.braintreePrivateKey,
-	});
+	constructor(braintreeEnvironment: any, braintreeMerchantId: any, braintreePublicKey: any, braintreePrivateKey: any) {
+		this.braintreeEnvironment = braintreeEnvironment;
+		this.braintreeMerchantId = braintreeMerchantId;
+		this.braintreePublicKey = braintreePublicKey;
+		this.braintreePrivateKey = braintreePrivateKey;
+
+		this.gateway = new braintree.BraintreeGateway({
+			environment: this.braintreeEnvironment,
+			merchantId: this.braintreeMerchantId,
+			publicKey: this.braintreePublicKey,
+			privateKey: this.braintreePrivateKey,
+		});
+	}
 
 	// Transaction methods
 
@@ -19,9 +27,9 @@ class Braintree {
 	 * Create a transaction
 	 * @param transactionOptions - options for the transaction
 	 */
-	static async createPayment(transactionOptions: TransactionOptions): Promise<any> {
+	public async createPayment(transactionOptions: TransactionOptions): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Braintree.gateway.transaction.sale(transactionOptions).then((result) => {
+			this.gateway.transaction.sale(transactionOptions).then((result: { success: any; transaction: unknown; errors: any }) => {
 				if (result.success) {
 					resolve(result.transaction);
 				} else {
@@ -36,9 +44,9 @@ class Braintree {
 	 * @param transactionId - id of the transaction
 	 * @returns {Promise<Transaction>}
 	 */
-	static async submitForSettlement(transactionId: string): Promise<any> {
+	public async submitForSettlement(transactionId: string): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Braintree.gateway.transaction.submitForSettlement(transactionId).then((result: any) => {
+			this.gateway.transaction.submitForSettlement(transactionId).then((result: any) => {
 				if (result.success) {
 					resolve(result.transaction);
 				} else {
@@ -56,9 +64,9 @@ class Braintree {
 	 * @param paymentMethodOptions - options for the payment method
 	 * @returns {Promise<PaymentMethod>}
 	 */
-	static async createPaymentMethod(customerId: string, paymentMethodOptions: any): Promise<any> {
+	public async createPaymentMethod(customerId: string, paymentMethodOptions: any): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Braintree.gateway.paymentMethod
+			this.gateway.paymentMethod
 				.create({
 					customerId,
 					...paymentMethodOptions,
@@ -79,9 +87,9 @@ class Braintree {
 	 * @param paymentMethodOptions - options for the payment method
 	 * @returns {Promise<PaymentMethod>}
 	 */
-	static async updatePaymentMethod(paymentMethodToken: string, paymentMethodOptions: any): Promise<any> {
+	public async updatePaymentMethod(paymentMethodToken: string, paymentMethodOptions: any): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Braintree.gateway.paymentMethod.update(paymentMethodToken, paymentMethodOptions).then((result: any) => {
+			this.gateway.paymentMethod.update(paymentMethodToken, paymentMethodOptions).then((result: any) => {
 				if (result.success) {
 					resolve(result.paymentMethod);
 				} else {
@@ -96,9 +104,9 @@ class Braintree {
 	 * @param paymentMethodToken - token of the payment method
 	 * @returns {Promise<PaymentMethod>}
 	 */
-	static async findPaymentMethod(paymentMethodToken: string): Promise<any> {
+	public async findPaymentMethod(paymentMethodToken: string): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Braintree.gateway.paymentMethod.find(paymentMethodToken).then((result: any) => {
+			this.gateway.paymentMethod.find(paymentMethodToken).then((result: any) => {
 				if (result.success) {
 					resolve(result.paymentMethod);
 				} else {
@@ -113,9 +121,9 @@ class Braintree {
 	 * @param paymentMethodToken - token of the payment method
 	 * @returns {Promise<PaymentMethod>}
 	 */
-	static async deletePaymentMethod(paymentMethodToken: string): Promise<any> {
+	public async deletePaymentMethod(paymentMethodToken: string): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Braintree.gateway.paymentMethod.delete(paymentMethodToken).then((result: any) => {
+			this.gateway.paymentMethod.delete(paymentMethodToken).then((result: any) => {
 				if (result.success) {
 					resolve(result.paymentMethod);
 				} else {
@@ -132,9 +140,9 @@ class Braintree {
 	 * @param customerOptions - options for the customer
 	 * @returns {Promise<Customer>}
 	 */
-	static async createCustomer(customerOptions: CustomerOptions): Promise<any> {
+	public async createCustomer(customerOptions: CustomerOptions): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Braintree.gateway.customer.create(customerOptions).then((result: { success: any; customer: unknown; errors: any }) => {
+			this.gateway.customer.create(customerOptions).then((result: { success: any; customer: unknown; errors: any }) => {
 				if (result.success) {
 					resolve(result.customer);
 				} else {
@@ -150,9 +158,9 @@ class Braintree {
 	 * @param customerOptions - options for the customer
 	 * @returns {Promise<Customer>}
 	 */
-	static async updateCustomer(customerId: string, customerOptions: CustomerOptions): Promise<any> {
+	public async updateCustomer(customerId: string, customerOptions: CustomerOptions): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Braintree.gateway.customer.update(customerId, customerOptions).then((result: { success: any; customer: unknown; errors: any }) => {
+			this.gateway.customer.update(customerId, customerOptions).then((result: { success: any; customer: unknown; errors: any }) => {
 				if (result.success) {
 					resolve(result.customer);
 				} else {
@@ -167,9 +175,9 @@ class Braintree {
 	 * @param customerId - id of the customer
 	 * @returns {Promise<Customer>}
 	 */
-	static async findCustomer(customerId: string): Promise<any> {
+	public async findCustomer(customerId: string): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Braintree.gateway.customer.find(customerId).then((result: any) => {
+			this.gateway.customer.find(customerId).then((result: any) => {
 				if (result.success) {
 					resolve(result.customer);
 				} else {
@@ -184,9 +192,9 @@ class Braintree {
 	 * @param customerId - id of the customer
 	 * @returns {Promise<Customer>}
 	 */
-	static async deleteCustomer(customerId: string): Promise<any> {
+	public async deleteCustomer(customerId: string): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Braintree.gateway.customer.delete(customerId).then((result: any) => {
+			this.gateway.customer.delete(customerId).then((result: any) => {
 				if (result.success) {
 					resolve(result.customer);
 				} else {

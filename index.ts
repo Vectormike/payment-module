@@ -1,19 +1,32 @@
-import Braintree from './services/braintree/index';
-import Stripe from './services/stripe/index';
+import Braintree from './services/braintree';
+import Stripe from './services/stripe';
 
+const proxyHandler = {
+	get(target: any, name: any) {
+		if (!target.hasOwnProperty(name)) {
+			throw new Error(`${name} is not a vali methos no Baxipay`);
+		}
+		/**
+		 * if node is inspecting then stick to target properties
+		 */
+		if (typeof name === 'symbol' || name === 'inspect') {
+			return target[name];
+		}
+
+		return target[name];
+	},
+};
 class PaymentService {
-	public braintree = Braintree;
-	public stripe = Stripe;
+	public braintree;
+	// public stripe;
 
 	/**
 	 * @param options - secret key, merchantId, environment and public key
 	 */
-	constructor(options: { braintreePrivateKey: string; braintreePublicKey: string; braintreeMerchantId: string; braintreeEnvironment: any; stripeSecretKey: string }) {
-		this.braintree.braintreeEnvironment = options.braintreeEnvironment;
-		this.braintree.braintreeMerchantId = options.braintreeMerchantId;
-		this.braintree.braintreePublicKey = options.braintreePublicKey;
-		this.braintree.braintreePrivateKey = options.braintreePrivateKey;
-		this.stripe.stripeSecretKey = options.stripeSecretKey;
+	constructor(options: { braintreePrivateKey?: any; braintreePublicKey: any; braintreeMerchantId?: any; braintreeEnvironment?: any; stripeSecretKey?: any }) {
+		this.braintree = new Braintree(options.braintreeEnvironment, options.braintreeMerchantId, options.braintreePublicKey, options.braintreePrivateKey);
+		// this.stripe = new Stripe(options.stripeSecretKey);
+		return new Proxy(this, proxyHandler);
 	}
 }
 

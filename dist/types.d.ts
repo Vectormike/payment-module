@@ -150,3 +150,30 @@ declare interface StripeChargeOptions {}
 declare interface StripePayoutOptions {}
 
 declare interface StripeRefundOptions {}
+
+declare interface PayPalOrderOptions {
+	intent: string;
+	purchase_units: Array<{
+		reference_id: string;
+		amount: {
+			currency_code: string;
+			value: string;
+		};
+		payee: {
+			email_address: string;
+		};
+		payment_instruction: {
+			platform_fees: Array<{
+				amount: {
+					currency_code: string;
+					value: string;
+				};
+				payee: {
+					email_address: string;
+				};
+			}>;
+		};
+	}>;
+	disbursement_mode: string;
+	payee_pricing_tier_id: string;
+}

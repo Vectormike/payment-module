@@ -1,9 +1,14 @@
 import stripe from 'stripe';
 
 class Stripe {
-	static stripeSecretKey: string = '';
+	private stripeSecretKey: string;
+	private stripe: any;
 
-	static stripe = new stripe(Stripe.stripeSecretKey, { apiVersion: '2020-08-27' });
+	constructor(stripeSecretKey: string) {
+		this.stripeSecretKey = stripeSecretKey;
+
+		this.stripe = new stripe(this.stripeSecretKey, { apiVersion: '2020-08-27' });
+	}
 
 	// Customer methods
 
@@ -11,9 +16,9 @@ class Stripe {
 	 * Create a customer
 	 * @param customerOptions - options for the customer
 	 */
-	static async createCustomer(customerOptions: any): Promise<any> {
+	public async createCustomer(customerOptions: any): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Stripe.stripe.customers.create(customerOptions).then((result: any) => {
+			this.stripe.customers.create(customerOptions).then((result: any) => {
 				if (result.id) {
 					resolve(result);
 				} else {
@@ -28,9 +33,9 @@ class Stripe {
 	 * 	 @param customerId - the customer id to retrieve
 	 * @returns {Promise<any>} - the customer
 	 */
-	static async retrieveCustomer(customerId: string): Promise<any> {
+	public async retrieveCustomer(customerId: string): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Stripe.stripe.customers.retrieve(customerId).then((result: any) => {
+			this.stripe.customers.retrieve(customerId).then((result: any) => {
 				if (result.id) {
 					resolve(result);
 				} else {
@@ -45,9 +50,9 @@ class Stripe {
 	 * @param customerId - the customer id to update
 	 * @param customerOptions - options for the customer
 	 */
-	static async updateCustomer(customerId: string, customerOptions: any): Promise<any> {
+	public async updateCustomer(customerId: string, customerOptions: any): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Stripe.stripe.customers.update(customerId, customerOptions).then((result: any) => {
+			this.stripe.customers.update(customerId, customerOptions).then((result: any) => {
 				if (result.id) {
 					resolve(result);
 				} else {
@@ -61,9 +66,9 @@ class Stripe {
 	 * Delete a customer
 	 *	@param customerId - the customer id to delete
 	 */
-	static async deleteCustomer(customerId: string): Promise<any> {
+	public async deleteCustomer(customerId: string): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Stripe.stripe.customers.del(customerId).then((result: any) => {
+			this.stripe.customers.del(customerId).then((result: any) => {
 				if (result.id) {
 					resolve(result);
 				} else {
@@ -77,9 +82,9 @@ class Stripe {
 	 * List all customers
 	 * @returns {Promise<any>} - the customers
 	 */
-	static async listCustomers(): Promise<any> {
+	public async listCustomers(): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Stripe.stripe.customers.list().then((result: any) => {
+			this.stripe.customers.list().then((result: any) => {
 				if (result.data) {
 					resolve(result.data);
 				} else {
@@ -94,9 +99,9 @@ class Stripe {
 	 * @param searchOptions - options for the search
 	 * @returns {Promise<any>} - the customers
 	 */
-	static async searchCustomers(searchOptions: StripeSearchOptions): Promise<any> {
+	public async searchCustomers(searchOptions: StripeSearchOptions): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Stripe.stripe.customers.list(searchOptions).then((result: any) => {
+			this.stripe.customers.list(searchOptions).then((result: any) => {
 				if (result.data) {
 					resolve(result.data);
 				} else {
@@ -112,9 +117,9 @@ class Stripe {
 	 * Create a charge
 	 * @param chargeOptions - options for the charge
 	 */
-	static async createCharge(chargeOptions: any): Promise<any> {
+	public async createCharge(chargeOptions: any): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Stripe.stripe.charges.create(chargeOptions).then((result: any) => {
+			this.stripe.charges.create(chargeOptions).then((result: any) => {
 				if (result.id) {
 					resolve(result);
 				} else {
@@ -127,9 +132,9 @@ class Stripe {
 	/**
 	 * List charges
 	 */
-	static async listCharges(): Promise<any> {
+	public async listCharges(): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Stripe.stripe.charges.list().then((result: any) => {
+			this.stripe.charges.list().then((result: any) => {
 				if (result.data) {
 					resolve(result.data);
 				} else {
@@ -144,9 +149,9 @@ class Stripe {
 	 * @param chargeId - the charge id to retrieve
 	 *  @returns {Promise<any>} - the charge
 	 */
-	static async retrieveCharge(chargeId: string): Promise<any> {
+	public async retrieveCharge(chargeId: string): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Stripe.stripe.charges.retrieve(chargeId).then((result: any) => {
+			this.stripe.charges.retrieve(chargeId).then((result: any) => {
 				if (result.id) {
 					resolve(result);
 				} else {
@@ -162,9 +167,9 @@ class Stripe {
 	 * @param chargeOptions - options for the charge
 	 * @returns {Promise<any>} - the charge
 	 */
-	static async updateCharge(chargeId: string, chargeOptions: any): Promise<any> {
+	public async updateCharge(chargeId: string, chargeOptions: any): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Stripe.stripe.charges.update(chargeId, chargeOptions).then((result: any) => {
+			this.stripe.charges.update(chargeId, chargeOptions).then((result: any) => {
 				if (result.id) {
 					resolve(result);
 				} else {
@@ -178,9 +183,9 @@ class Stripe {
 	 * Create a payout
 	 * @param payoutOptions - options for the payout
 	 */
-	static async createPayout(payoutOptions: any): Promise<any> {
+	public async createPayout(payoutOptions: any): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Stripe.stripe.payouts.create(payoutOptions).then((result: any) => {
+			this.stripe.payouts.create(payoutOptions).then((result: any) => {
 				if (result.id) {
 					resolve(result);
 				} else {
@@ -193,9 +198,9 @@ class Stripe {
 	/**
 	 * List payouts
 	 */
-	static async listPayouts(): Promise<any> {
+	public async listPayouts(): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Stripe.stripe.payouts.list().then((result: any) => {
+			this.stripe.payouts.list().then((result: any) => {
 				if (result.data) {
 					resolve(result.data);
 				} else {
@@ -209,9 +214,9 @@ class Stripe {
 	 * Retrieve balance
 	 *
 	 */
-	static async retrieveBalance(): Promise<any> {
+	public async retrieveBalance(): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Stripe.stripe.balance.retrieve().then((result: any) => {
+			this.stripe.balance.retrieve().then((result: any) => {
 				if (result.pending) {
 					resolve(result.pending);
 				} else {
@@ -228,9 +233,9 @@ class Stripe {
 	 * @param amount - the amount to refund
 	 * @param reason - the reason for the refund
 	 */
-	static async createRefund(refundOptions: any): Promise<any> {
+	public async createRefund(refundOptions: any): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Stripe.stripe.refunds.create(refundOptions).then((result: any) => {
+			this.stripe.refunds.create(refundOptions).then((result: any) => {
 				if (result.id) {
 					resolve(result);
 				} else {
@@ -243,9 +248,9 @@ class Stripe {
 	/**
 	 * List refunds
 	 */
-	static async listRefunds(): Promise<any> {
+	public async listRefunds(): Promise<any> {
 		return new Promise((resolve, reject) => {
-			Stripe.stripe.refunds.list().then((result: any) => {
+			this.stripe.refunds.list().then((result: any) => {
 				if (result.data) {
 					resolve(result.data);
 				} else {

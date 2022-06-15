@@ -1,9 +1,17 @@
 import fetch from 'node-fetch';
+
 class PayPal {
-	static paypalMode: string = '';
-	static paypalClientId: string = '';
-	static paypalSecret: string = '';
-	static base: string = '';
+	private paypalMode: string;
+	private paypalClientId: string;
+	private paypalSecret: string;
+	private base: string;
+
+	constructor(paypalMode: string, paypalClientId: string, paypalSecret: string) {
+		this.paypalMode = paypalMode;
+		this.paypalClientId = paypalClientId;
+		this.paypalSecret = paypalSecret;
+		this.base = `https://api.${this.paypalMode}.paypal.com`;
+	}
 
 	// Order Methods
 
@@ -12,7 +20,7 @@ class PayPal {
 	 * @param orderDetails
 	 * @returns {Promise<any>}
 	 */
-	static async createOrder(orderDetails: any): Promise<any> {
+	public async createOrder(orderDetails: any): Promise<any> {
 		const access_token = await this.generateAccessToken();
 		const response = await fetch(`${this.base}/v2/checkout/orders`, {
 			method: 'post',
@@ -42,7 +50,7 @@ class PayPal {
 	 * @param orderDetails
 	 * @returns {Promise<any>}
 	 */
-	static async updateOrder(orderId: string, orderDetails: any): Promise<any> {
+	public async updateOrder(orderId: string, orderDetails: any): Promise<any> {
 		const access_token = await this.generateAccessToken();
 		const response = await fetch(`${this.base}/v2/checkout/orders/${orderId}`, {
 			method: 'patch',
@@ -71,7 +79,7 @@ class PayPal {
 	 * @param orderId
 	 * @returns {Promise<any>}
 	 */
-	static async showOrder(orderId: string): Promise<any> {
+	public async showOrder(orderId: string): Promise<any> {
 		const access_token = await this.generateAccessToken();
 		const response = await fetch(`${this.base}/v2/checkout/orders/${orderId}`, {
 			method: 'get',
@@ -84,7 +92,7 @@ class PayPal {
 		return data;
 	}
 
-	static async capturePayment(orderId: string) {
+	public async capturePayment(orderId: string) {
 		const access_token = await this.generateAccessToken();
 		const response = await fetch(`${this.base}/v2/checkout/orders/${orderId}/capture`, {
 			method: 'post',
@@ -104,7 +112,7 @@ class PayPal {
 	 * @param batchPayoutDetails
 	 * @returns {Promise<any>}
 	 */
-	static async createBatchPayout(batchPayoutDetails: any): Promise<any> {
+	public async createBatchPayout(batchPayoutDetails: any): Promise<any> {
 		const access_token = await this.generateAccessToken();
 		const response = await fetch(`${this.base}/v2/payments/payouts`, {
 			method: 'post',
@@ -143,7 +151,7 @@ class PayPal {
 		return data;
 	}
 
-	private static async generateAccessToken() {
+	private async generateAccessToken() {
 		const auth = Buffer.from(this.paypalClientId + ':' + this.paypalSecret).toString('base64');
 		const response = await fetch(`${this.base}/v1/oauth2/token`, {
 			method: 'post',
@@ -156,3 +164,5 @@ class PayPal {
 		return data.access_token;
 	}
 }
+
+export default PayPal;

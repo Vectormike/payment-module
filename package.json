@@ -4,7 +4,8 @@
   "description": "Nodejs API wrapper for Braintree and Paypal",
   "main": "index.js",
   "scripts": {
-    "test": "npm run build && mocha dist/tests/\\*\\*/\\*.spec.js --timeout 15000 && rm -rf dist",
+    "dev": "npm run build && node dist/index.js",
+    "test": "npm run build && mocha dist/tests/braintree.spec.js --timeout 15000 && rm -rf dist",
     "build": "tsc && cp types.d.ts dist/ && cp .env dist/ && cp package.json dist/"
   },
   "keywords": [],
@@ -13,6 +14,7 @@
   "dependencies": {
     "@paypal/checkout-server-sdk": "^1.0.3",
     "braintree": "^3.11.0",
+    "dotenv": "^16.0.1",
     "node-fetch": "^3.2.6",
     "paypal-rest-sdk": "^1.8.1",
     "stripe": "^9.1.0"
